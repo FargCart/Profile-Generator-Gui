@@ -128,12 +128,24 @@ def LetsDock():
     print(antibodyFile)
     print(antigenFile)
     print(os.system('pwd'))
-    dockWindow.geometry('600x300')
+    dockWindow.geometry('300x100')
     dockWindow.title("Chain Select")
-    
+    Label(dockWindow, text='Antigen Chain').grid(row=0)
+    Label(dockWindow, text='Antibody Chain').grid(row=1)
+    antigenchainBox = Entry(dockWindow)
+    antibodychainBox = Entry(dockWindow)
+    antigenchainBox.grid(row=0,column=1)
+    antibodychainBox.grid(row=1,column=1)
+    def ReturnChains():
+        antigenChain = antigenchainBox.get()
+        antibodyChain = antibodychainBox.get()
+        print(antigenChain + antibodyChain)
+
     # os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
     #     receptor) + " --lig-chains " + '"' + str(lChain) + '"' + " --rec-chains  " + str(
     #     rChain) + " -j " + str(textL) + "_docking_" + str(textR))
+
+    Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
 
 
