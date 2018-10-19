@@ -12,7 +12,7 @@ import os
 
 import subprocess
 
-from cluspro_api import cmd_submit
+
 
 import time
 window = Tk()
@@ -153,7 +153,12 @@ def LetsDock():
         os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
             antigenFile) + " --lig-chains " + '"' + str(antibodyChain) + '"' + " --rec-chains  " + str(
             antigenChain) + " -j " + str(jobName))
-
+        dockOutcome = subprocess.run(
+            ["cluspro_submit", "--receptor", str(antigenFile), "--rec-chains", str(antigenChain), "--ligand",
+                str(antibodyFile),"--lig-chains",str(antibodyChain), "-j", str(finaljobName)], stdout=subprocess.PIPE)
+        jobid = dockOutcome.stdout
+        jobid = jobid.decode('utf -8')
+        print('This is your JobID : '+str(jobid))
     Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
 
