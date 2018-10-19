@@ -10,11 +10,16 @@ from tkinter import scrolledtext
 
 import os
 
+import subprocess
+
+from cluspro_api import cmd_submit
+
 import time
 window = Tk()
 dockWindow = Tk()
 chk_state = BooleanVar()
 chk_state.set(False)
+
 
 
 window.geometry('600x300')
@@ -125,25 +130,29 @@ def LetsDock():
     os.chdir(str(theirDirectory))
     antibodyFile = antibodyfileName
     antigenFile = antigenfileName
-    print(antibodyFile)
-    print(antigenFile)
-    print(os.system('pwd'))
+    # print(antibodyFile)
+    # print(antigenFile)
+    # print(os.system('pwd'))
     dockWindow.geometry('300x100')
     dockWindow.title("Chain Select")
-    Label(dockWindow, text='Antigen Chain').grid(row=0)
-    Label(dockWindow, text='Antibody Chain').grid(row=1)
+    Label(dockWindow, text='Job Name').grid(row=0)
+    Label(dockWindow, text='Antigen Chain').grid(row=1)
+    Label(dockWindow, text='Antibody Chain').grid(row=2)
     antigenchainBox = Entry(dockWindow)
     antibodychainBox = Entry(dockWindow)
-    antigenchainBox.grid(row=0,column=1)
-    antibodychainBox.grid(row=1,column=1)
+    jobName = Entry(dockWindow)
+    jobName.grid(row=0,column=1)
+    antigenchainBox.grid(row=1,column=1)
+    antibodychainBox.grid(row=2,column=1)
+
     def ReturnChains():
         antigenChain = antigenchainBox.get()
         antibodyChain = antibodychainBox.get()
-        print(antigenChain + antibodyChain)
+        finaljobName = jobName.get()
 
-    # os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
-    #     receptor) + " --lig-chains " + '"' + str(lChain) + '"' + " --rec-chains  " + str(
-    #     rChain) + " -j " + str(textL) + "_docking_" + str(textR))
+        os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
+            antigenFile) + " --lig-chains " + '"' + str(antibodyChain) + '"' + " --rec-chains  " + str(
+            antigenChain) + " -j " + str(jobName))
 
     Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
