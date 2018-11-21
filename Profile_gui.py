@@ -20,6 +20,15 @@ dockWindow = Tk()
 chk_state = BooleanVar()
 chk_state.set(False)
 
+def countdown(t):
+    while t:
+        mins, secs = divmod(t, 60)
+        timeformat = '{:02d}:{:02d}'.format(mins, secs)
+
+        print(timeformat, end='\r')
+        time.sleep(1)
+        t -= 1
+
 
 
 window.geometry('600x300')
@@ -150,15 +159,36 @@ def LetsDock():
         antibodyChain = antibodychainBox.get()
         finaljobName = jobName.get()
 
-        os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
-            antigenFile) + " --lig-chains " + '"' + str(antibodyChain) + '"' + " --rec-chains  " + str(
-            antigenChain) + " -j " + str(jobName))
+        # os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
+        #     antigenFile) + " --lig-chains " + '"' + str(antibodyChain) + '"' + " --rec-chains  " + str(
+        #     antigenChain) + " -j " + str(jobName))
         dockOutcome = subprocess.run(
             ["cluspro_submit", "--receptor", str(antigenFile), "--rec-chains", str(antigenChain), "--ligand",
                 str(antibodyFile),"--lig-chains",str(antibodyChain), "-j", str(finaljobName)], stdout=subprocess.PIPE)
         jobid = dockOutcome.stdout
         jobid = jobid.decode('utf -8')
         print('This is your JobID : '+str(jobid))
+        taskComplete = 0
+        # Pausing for 1 hour
+        # time.sleep(60)
+
+        while taskComplete == 0:
+            print('Checking agian in:')
+            countdown(1800)
+
+            p = subprocess.run(["cluspro_download", str(jobid)], stderr=subprocess.PIPE)
+            output = p.stderr
+            output = output.decode('utf-8')
+            # print(str(output))
+            # print(output.decode('utf-8'))
+            myMessage = 'Downloading '+str(jobid)+'...ERROR \nJob not finished'
+            # print(myMessage)
+            if str(output[0:25]) == str(myMessage[0:25]):
+                print("Still Cooking")
+            else:
+                taskComplete = 1
+
+        print('Job is Completed')
     Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
 
