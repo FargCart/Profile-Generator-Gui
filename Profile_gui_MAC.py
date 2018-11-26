@@ -10,11 +10,25 @@ from tkinter import scrolledtext
 
 import os
 
+import subprocess
+
+
+
 import time
 window = Tk()
 dockWindow = Tk()
 chk_state = BooleanVar()
 chk_state.set(False)
+
+def countdown(t):
+    while t:
+        mins, secs = divmod(t, 60)
+        timeformat = '{:02d}:{:02d}'.format(mins, secs)
+
+        print(timeformat, end='\r')
+        time.sleep(1)
+        t -= 1
+
 
 
 window.geometry('600x300')
@@ -101,7 +115,6 @@ def antigenClicked():
     global antigenfileName
     antigenfileName = str(antigenPDB[-1])
     antigenWindow.insert(INSERT,str(antigenPDB[-1]))
-
 antigenButton = Button(window,text='Select Antigen PDB',command=antigenClicked)
 antigenButton.grid(column=10,row=1)
 
@@ -128,7 +141,10 @@ def LetsDock():
     os.chdir(str(theirDirectory))
     antibodyFile = antibodyfileName
     antigenFile = antigenfileName
-    dockWindow.geometry('300x300')
+    # print(antibodyFile)
+    # print(antigenFile)
+    # print(os.system('pwd'))
+    dockWindow.geometry('300x100')
     dockWindow.title("Chain Select")
     Label(dockWindow, text='Job Name').grid(row=0)
     Label(dockWindow, text='Antigen Chain').grid(row=1)
@@ -139,17 +155,43 @@ def LetsDock():
     jobName.grid(row=0,column=1)
     antigenchainBox.grid(row=1,column=1)
     antibodychainBox.grid(row=2,column=1)
-    # genSplit = antigenFile.split('_united')
-    # bodySplit = antibodyFile.split('_united')
+
     def ReturnChains():
         antigenChain = antigenchainBox.get()
         antibodyChain = antibodychainBox.get()
         finaljobName = jobName.get()
-        os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
-            antigenFile) + " --lig-chains " + '"' + str(antibodyChain) + '"' + " --rec-chains  " + str(
-            antigenChain) + " -j " + str(finaljobName))
 
-    Button(dockWindow, text='Submit', command=ReturnChains).grid(row=4, column=1, stick=W, pady=4)
+        # os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
+        #     antigenFile) + " --lig-chains " + '"' + str(antibodyChain) + '"' + " --rec-chains  " + str(
+        #     antigenChain) + " -j " + str(jobName))
+        dockOutcome = subprocess.run(
+            ["cluspro_submit", "--receptor", str(antigenFile), "--rec-chains", str(antigenChain), "--ligand",
+                str(antibodyFile),"--lig-chains",str(antibodyChain), "-j", str(finaljobName)], stdout=subprocess.PIPE)
+        jobid = dockOutcome.stdout
+        jobid = jobid.decode('utf -8')
+        print('This is your JobID : '+str(jobid))
+        taskComplete = 0
+        # Pausing for 1 hour
+        # time.sleep(60)
+
+        while taskComplete == 0:
+            print('Checking agian in:')
+            countdown(1800)
+
+            p = subprocess.run(["cluspro_download", str(jobid)], stderr=subprocess.PIPE)
+            output = p.stderr
+            output = output.decode('utf-8')
+            # print(str(output))
+            # print(output.decode('utf-8'))
+            myMessage = 'Downloading '+str(jobid)+'...ERROR \nJob not finished'
+            # print(myMessage)
+            if str(output[0:25]) == str(myMessage[0:25]):
+                print("Still Cooking")
+            else:
+                taskComplete = 1
+
+        print('Job is Completed')
+    Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
 
 
