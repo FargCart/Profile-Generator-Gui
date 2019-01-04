@@ -12,9 +12,16 @@ import os
 
 import subprocess
 
+import tarfile
 
 
 import time
+
+import cluspro_renaming as cr
+
+import shutil
+
+
 window = Tk()
 dockWindow = Tk()
 chk_state = BooleanVar()
@@ -159,6 +166,7 @@ def LetsDock():
     def ReturnChains():
         antigenChain = antigenchainBox.get()
         antibodyChain = antibodychainBox.get()
+        global finaljobName
         finaljobName = jobName.get()
 
         # os.system("cluspro_submit --ligand " + str(antibodyFile) + " --receptor " + str(
@@ -167,6 +175,7 @@ def LetsDock():
         dockOutcome = subprocess.run(
             ["cluspro_submit", "--receptor", str(antigenFile), "--rec-chains", str(antigenChain), "--ligand",
                 str(antibodyFile),"--lig-chains",str(antibodyChain), "-j", str(finaljobName)], stdout=subprocess.PIPE)
+        global jobid
         jobid = dockOutcome.stdout
         jobid = jobid.decode('utf -8')
         print('This is your JobID : '+str(jobid))
@@ -193,7 +202,13 @@ def LetsDock():
         print('Job is Completed')
     Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
-
+def expandFolder():
+    #After download will need to untar the folder to get into it
+    os.chdir(str(theirDirectory))
+    fileTar = tarfile.open('cluspro.'+str(jobid)+'.tar.bz2')
+    os.chdir('cluspro.'+str(jobid))
+    cr.theRename(str(finaljobName))
+    shut
 
 window.mainloop()
 
