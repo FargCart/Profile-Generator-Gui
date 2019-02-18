@@ -1,3 +1,4 @@
+import pymol
 import tkinter
 
 from tkinter import *
@@ -14,18 +15,19 @@ import subprocess
 
 import tarfile
 
-
 import time
 
 import cluspro_renaming as cr
 
-import shutil
+improt re
 
+import shutil
 
 window = Tk()
 dockWindow = Tk()
 chk_state = BooleanVar()
 chk_state.set(False)
+
 
 def countdown(t):
     while t:
@@ -37,14 +39,12 @@ def countdown(t):
         t -= 1
 
 
-
 window.geometry('600x300')
 window.title("Antibody-Antigen Profile Generator")
-antibodyWindow = scrolledtext.ScrolledText(window,width=20,height=10)
-antigenWindow = scrolledtext.ScrolledText(window,width=20,height=10)
+antibodyWindow = scrolledtext.ScrolledText(window, width=20, height=10)
+antigenWindow = scrolledtext.ScrolledText(window, width=20, height=10)
 
-
-antibodyWindow.grid(column=12,row=0)
+antibodyWindow.grid(column=12, row=0)
 antigenWindow.grid(column=10, row=0)
 
 # A Bunch of Variables
@@ -62,20 +62,20 @@ venndiagramButton1var = IntVar()
 venndiagramButton2var = IntVar()
 
 # Options
-dockLabel = Label(window, text="Docking", font=('Helivtica'))
-interactionLabel = Label(window, text="Interaction table", font=('Helivitca'))
-heatmapLabel = Label(window, text="Heatmap", font=('Helivtica'))
-clusterLabel = Label(window, text="Cluster", font=('Helivtica'))
-metricsLabel = Label(window, text="Metrics", font=('Helivtica'))
-venndiagram = Label(window, text="Venn Diagram", font=('Helivtica'))
+dockLabel = Label(window, text="Docking", font='Helivtica')
+interactionLabel = Label(window, text="Interaction table", font='Helivitca')
+heatmapLabel = Label(window, text="Heatmap", font='Helivtica')
+clusterLabel = Label(window, text="Cluster", font='Helivtica')
+metricsLabel = Label(window, text="Metrics", font='Helivtica')
+venndiagram = Label(window, text="Venn Diagram", font='Helivtica')
 
 # Options Placement
-dockLabel.grid(column=0, row=1,sticky=W)
-interactionLabel.grid(column=0, row=2,sticky=W)
-heatmapLabel.grid(column=0, row=3,sticky=W)
-clusterLabel.grid(column=0, row=4,sticky=W)
-metricsLabel.grid(column=0, row=5,sticky=W)
-venndiagram.grid(column=0, row=6,stick=W)
+dockLabel.grid(column=0, row=1, sticky=W)
+interactionLabel.grid(column=0, row=2, sticky=W)
+heatmapLabel.grid(column=0, row=3, sticky=W)
+clusterLabel.grid(column=0, row=4, sticky=W)
+metricsLabel.grid(column=0, row=5, sticky=W)
+venndiagram.grid(column=0, row=6, stick=W)
 
 # Options Check marks
 dockButton1 = Checkbutton(window, text='Yes', var=dockButton1var)
@@ -91,57 +91,65 @@ metricButton2 = Checkbutton(window, text='No', var=metricButton2var)
 venndiagramButton1 = Checkbutton(window, text='Yes', var=venndiagramButton1var)
 venndiagramButton2 = Checkbutton(window, text='No', var=venndiagramButton2var)
 
-
-
-
-
 # Options Check marks Placement
-dockButton1.grid(column=1,row=1)
-dockButton2.grid(column=2,row=1)
-interctionButton1.grid(column=1,row=2)
-interactionButton2.grid(column=2,row=2)
-heatmapButton1.grid(column=1,row=3)
-heatmapButton2.grid(column=2,row=3)
-clustButton1.grid(column=1,row=4)
-clustButton2.grid(column=2,row=4)
-metricButton1.grid(column=1,row=5)
-metricButton2.grid(column=2,row=5)
-venndiagramButton1.grid(column=1,row=6)
-venndiagramButton2.grid(column=2,row=6)
+dockButton1.grid(column=1, row=1)
+dockButton2.grid(column=2, row=1)
+interctionButton1.grid(column=1, row=2)
+interactionButton2.grid(column=2, row=2)
+heatmapButton1.grid(column=1, row=3)
+heatmapButton2.grid(column=2, row=3)
+clustButton1.grid(column=1, row=4)
+clustButton2.grid(column=2, row=4)
+metricButton1.grid(column=1, row=5)
+metricButton2.grid(column=2, row=5)
+venndiagramButton1.grid(column=1, row=6)
+venndiagramButton2.grid(column=2, row=6)
+
 
 def userDirectory():
     global theirDirectory
     theirDirectory = filedialog.askdirectory()
 
 
-directoryButton = Button(window,text="Select Directory",command=userDirectory)
-directoryButton.grid(column=0,row=0)
+directoryButton = Button(window, text="Select Directory", command=userDirectory)
+directoryButton.grid(column=0, row=0)
+
+
 def antigenClicked():
-    antigenFile = filedialog.askopenfilename(initialdir = str(os.system("pwd")),title = "Select Antigen file",filetypes = (("pdb files","*.pdb"),("all files","*.*")))
+    antigenFile = filedialog.askopenfilename(initialdir=str(os.system("pwd")), title="Select Antigen file",
+                                             filetypes=(("pdb files", "*.pdb"), ("all files", "*.*")))
     antigenPDB = str(antigenFile).split('/')
     global antigenfileName
     antigenfileName = str(antigenPDB[-1])
-    antigenWindow.insert(INSERT,str(antigenPDB[-1]))
-antigenButton = Button(window,text='Select Antigen PDB',command=antigenClicked)
-antigenButton.grid(column=10,row=1)
+    antigenWindow.insert(INSERT, str(antigenPDB[-1]))
+
+
+antigenButton = Button(window, text='Select Antigen PDB', command=antigenClicked)
+antigenButton.grid(column=10, row=1)
+
 
 def antibodyClicked():
-    antibodyFile = filedialog.askopenfilename(initialdir = str(os.system("pwd")),title = "Select Antibody file",filetypes = (("pdb files","*.pdb"),("all files","*.*")))
-    antibodyPDB= str(antibodyFile).split('/')
+    antibodyFile = filedialog.askopenfilename(initialdir=str(os.system("pwd")), title="Select Antibody file",
+                                              filetypes=(("pdb files", "*.pdb"), ("all files", "*.*")))
+    antibodyPDB = str(antibodyFile).split('/')
     global antibodyfileName
     antibodyfileName = str(antibodyPDB[-1])
-    antibodyWindow.insert(INSERT,str(antibodyPDB[-1]))
+    antibodyWindow.insert(INSERT, str(antibodyPDB[-1]))
 
-antibodyButton = Button(window, text='Select Antibody PDB',command=antibodyClicked)
-antibodyButton.grid(column=12,row=1)
+
+antibodyButton = Button(window, text='Select Antibody PDB', command=antibodyClicked)
+antibodyButton.grid(column=12, row=1)
+
 
 def clicked():
-    dockOutcome= (dockButton1var.get())
+    dockOutcome = (dockButton1var.get())
     # print(dockOutcome)
-    if dockOutcome ==1:
+    if dockOutcome == 1:
         LetsDock()
-submitButton = Button(window,text="Submit",command=clicked)
-submitButton.grid(column=12,row=6)
+
+
+submitButton = Button(window, text="Submit", command=clicked)
+submitButton.grid(column=12, row=6)
 
 
 def LetsDock():
@@ -159,12 +167,14 @@ def LetsDock():
     antigenchainBox = Entry(dockWindow)
     antibodychainBox = Entry(dockWindow)
     jobName = Entry(dockWindow)
-    jobName.grid(row=0,column=1)
-    antigenchainBox.grid(row=1,column=1)
-    antibodychainBox.grid(row=2,column=1)
+    jobName.grid(row=0, column=1)
+    antigenchainBox.grid(row=1, column=1)
+    antibodychainBox.grid(row=2, column=1)
 
     def ReturnChains():
+        global antigenChain
         antigenChain = antigenchainBox.get()
+        global antibodyChain
         antibodyChain = antibodychainBox.get()
         global finaljobName
         finaljobName = jobName.get()
@@ -174,11 +184,11 @@ def LetsDock():
         #     antigenChain) + " -j " + str(jobName))
         dockOutcome = subprocess.run(
             ["cluspro_submit", "--receptor", str(antigenFile), "--rec-chains", str(antigenChain), "--ligand",
-                str(antibodyFile),"--lig-chains",str(antibodyChain), "-j", str(finaljobName)], stdout=subprocess.PIPE)
+             str(antibodyFile), "--lig-chains", str(antibodyChain), "-j", str(finaljobName)], stdout=subprocess.PIPE)
         global jobid
         jobid = dockOutcome.stdout
         jobid = jobid.decode('utf -8')
-        print('This is your JobID : '+str(jobid))
+        print('This is your JobID : ' + str(jobid))
         taskComplete = 0
         # Pausing for 1 hour
         # time.sleep(60)
@@ -192,7 +202,7 @@ def LetsDock():
             output = output.decode('utf-8')
             # print(str(output))
             # print(output.decode('utf-8'))
-            myMessage = 'Downloading '+str(jobid)+'...ERROR \nJob not finished'
+            myMessage = 'Downloading ' + str(jobid) + '...ERROR \nJob not finished'
             # print(myMessage)
             if str(output[0:25]) == str(myMessage[0:25]):
                 print("Still Cooking")
@@ -200,15 +210,35 @@ def LetsDock():
                 taskComplete = 1
 
         print('Job is Completed')
+
     Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
+
 def expandFolder():
-    #After download will need to untar the folder to get into it
+    # After download will need to untar the folder to get into it
     os.chdir(str(theirDirectory))
-    fileTar = tarfile.open('cluspro.'+str(jobid)+'.tar.bz2')
-    os.chdir('cluspro.'+str(jobid))
+    fileTar = tarfile.open('cluspro.' + str(jobid) + '.tar.bz2')
+    fileTar.extractall()
+    os.chdir('cluspro.' + str(jobid))
     cr.theRename(str(finaljobName))
-    shut
+    # Sorting everything into clean folders
+    os.system('mkdir Balanced_models')
+    os.system('mkdir Electrostatic_models')
+    os.system('mkdir Hydrophobic_models')
+    os.system('mkdir Vdw_models')
+    dirLength = [f for f in os.listdir('.') if re.search(r'balanced', f)]
+    for balanced in range(0, len(dirLength)):
+        shutil.move(dirLength[balanced], 'Balanced_models')
+    dirLength = [f for f in os.listdir('.') if re.search(r'static', f)]
+    for electrostatic in range(0, len(dirLength)):
+        shutil.move(dirLength[electrostatic], 'Electrostatic_models')
+    dirLength = [f for f in os.listdir('.') if re.search(r'phobic', f)]
+    for hydro in range(0, len(dirLength)):
+        shutil.move(dirLength[hydro], 'Hydrophobic_models')
+    dirLength = [f for f in os.listdir('.') if re.search(r'vdw', f)]
+    for vdw in range(0, len(dirLength)):
+        shutil.move(dirLength[vdw], 'Vdw_models')
+
+
 
 window.mainloop()
-
