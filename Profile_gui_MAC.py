@@ -19,9 +19,18 @@ import time
 
 import cluspro_renaming as cr
 
-improt re
+import re
 
 import shutil
+
+import Protein_Interaction_Analysis as pia
+
+import split_CSV as sc
+
+import heatmapGen as hm
+
+import cluspro_put_together as pt
+
 
 window = Tk()
 dockWindow = Tk()
@@ -50,7 +59,7 @@ antigenWindow.grid(column=10, row=0)
 # A Bunch of Variables
 dockButton1var = IntVar()
 dockButton2var = IntVar()
-interctionButton1var = IntVar()
+interactionButton1var = IntVar()
 interactionButton2var = IntVar()
 heatmapButton1var = IntVar()
 heatmapButton2var = IntVar()
@@ -80,7 +89,7 @@ venndiagram.grid(column=0, row=6, stick=W)
 # Options Check marks
 dockButton1 = Checkbutton(window, text='Yes', var=dockButton1var)
 dockButton2 = Checkbutton(window, text='No', var=dockButton2var)
-interctionButton1 = Checkbutton(window, text='Yes', var=interctionButton1var)
+interctionButton1 = Checkbutton(window, text='Yes', var=interactionButton1var)
 interactionButton2 = Checkbutton(window, text='No', var=interactionButton2var)
 heatmapButton1 = Checkbutton(window, text='Yes', var=heatmapButton1var)
 heatmapButton2 = Checkbutton(window, text='No', var=heatmapButton2var)
@@ -141,14 +150,14 @@ antibodyButton = Button(window, text='Select Antibody PDB', command=antibodyClic
 antibodyButton.grid(column=12, row=1)
 
 
-def clicked():
+def dockClicked():
     dockOutcome = (dockButton1var.get())
     # print(dockOutcome)
     if dockOutcome == 1:
         LetsDock()
 
 
-submitButton = Button(window, text="Submit", command=clicked)
+submitButton = Button(window, text="Submit", command=dockClicked)
 submitButton.grid(column=12, row=6)
 
 
@@ -185,10 +194,13 @@ def LetsDock():
         dockOutcome = subprocess.run(
             ["cluspro_submit", "--receptor", str(antigenFile), "--rec-chains", str(antigenChain), "--ligand",
              str(antibodyFile), "--lig-chains", str(antibodyChain), "-j", str(finaljobName)], stdout=subprocess.PIPE)
-        global jobid
+        print('This is dockOutcome = '+str(dockOutcome))
+
         jobid = dockOutcome.stdout
-        jobid = jobid.decode('utf -8')
-        print('This is your JobID : ' + str(jobid))
+        global finalID
+        finalID = jobid.decode('utf -8')
+        finalID = str(finalID)
+        print('This is your JobID : %s' % finalID)
         taskComplete = 0
         # Pausing for 1 hour
         # time.sleep(60)
@@ -197,12 +209,12 @@ def LetsDock():
             print('Checking agian in:')
             countdown(1800)
 
-            p = subprocess.run(["cluspro_download", str(jobid)], stderr=subprocess.PIPE)
+            p = subprocess.run(["cluspro_download", finalID], stderr=subprocess.PIPE)
             output = p.stderr
             output = output.decode('utf-8')
             # print(str(output))
             # print(output.decode('utf-8'))
-            myMessage = 'Downloading ' + str(jobid) + '...ERROR \nJob not finished'
+            myMessage = 'Downloading ' + finalID + '...ERROR \nJob not finished'
             # print(myMessage)
             if str(output[0:25]) == str(myMessage[0:25]):
                 print("Still Cooking")
@@ -210,22 +222,22 @@ def LetsDock():
                 taskComplete = 1
 
         print('Job is Completed')
-
+        expandFolder()
     Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
 
 def expandFolder():
     # After download will need to untar the folder to get into it
     os.chdir(str(theirDirectory))
-    fileTar = tarfile.open('cluspro.' + str(jobid) + '.tar.bz2')
+    fileTar = tarfile.open('cluspro.' + finalID + '.tar.bz2')
     fileTar.extractall()
-    os.chdir('cluspro.' + str(jobid))
+    os.chdir('cluspro.%s' % finalID)
     cr.theRename(str(finaljobName))
     # Sorting everything into clean folders
-    os.system('mkdir Balanced_models')
-    os.system('mkdir Electrostatic_models')
-    os.system('mkdir Hydrophobic_models')
-    os.system('mkdir Vdw_models')
+    os.mkdir('Balanced_models')
+    os.mkdir('Electrostatic_models')
+    os.mkdir('Hydrophobic_models')
+    os.mkdir('Vdw_models')
     dirLength = [f for f in os.listdir('.') if re.search(r'balanced', f)]
     for balanced in range(0, len(dirLength)):
         shutil.move(dirLength[balanced], 'Balanced_models')
@@ -238,6 +250,37 @@ def expandFolder():
     dirLength = [f for f in os.listdir('.') if re.search(r'vdw', f)]
     for vdw in range(0, len(dirLength)):
         shutil.move(dirLength[vdw], 'Vdw_models')
+
+# Interaction Table generation
+
+def interClicked():
+    interOutcome = (interactionButton1var.get())
+    if interOutcome == 1:
+        makeInteraction()
+def makeInteraction():
+    os.chdir(str(theirDirectory))
+    os.chdir('cluspro.' + finalID)
+    os.chdir('Balanced_models')
+
+    pt.putTogether(str(finaljobName))
+    pia.proteinInteraction(str(finaljobName), str(antibodyChain), str(antigenChain))
+    sc.csvParser(str(finaljobName) + "_interaction_tables.csv", )
+    os.mkdir(str(finaljobName) + '_interaction_tables')
+    itDir = [f for f in os.listdir('.') if re.search(r'_table_', f)]
+    for interTable in range(0, len(itDir)):
+        shutil.move(itDir[interTable], str(finaljobName) + '_interaction_tables')
+
+
+# Heatmap generation
+
+def heatmapClicked():
+    heatmapOutcome = (heatmapButton1var.get())
+    if heatmapOutcome == 1:
+        createHeatmap()
+def createHeatmap():
+    os.chdir(str(finaljobName) + '_interaction_tables')
+    hm.heatmap(str(finaljobName))
+
 
 
 
