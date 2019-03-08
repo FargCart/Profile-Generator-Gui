@@ -33,7 +33,10 @@ import cluspro_put_together as pt
 
 
 window = Tk()
-dockWindow = Tk()
+
+
+
+
 chk_state = BooleanVar()
 chk_state.set(False)
 
@@ -69,6 +72,7 @@ metricButton1var = IntVar()
 metricButton2var = IntVar()
 venndiagramButton1var = IntVar()
 venndiagramButton2var = IntVar()
+checkDockButton1var = IntVar()
 
 # Options
 dockLabel = Label(window, text="Docking", font='Helivtica')
@@ -77,6 +81,7 @@ heatmapLabel = Label(window, text="Heatmap", font='Helivtica')
 clusterLabel = Label(window, text="Cluster", font='Helivtica')
 metricsLabel = Label(window, text="Metrics", font='Helivtica')
 venndiagram = Label(window, text="Venn Diagram", font='Helivtica')
+checkDock = Label(window, text="Check Dock", font='Helivtica')
 
 # Options Placement
 dockLabel.grid(column=0, row=1, sticky=W)
@@ -85,6 +90,7 @@ heatmapLabel.grid(column=0, row=3, sticky=W)
 clusterLabel.grid(column=0, row=4, sticky=W)
 metricsLabel.grid(column=0, row=5, sticky=W)
 venndiagram.grid(column=0, row=6, stick=W)
+checkDock.grid(column=0, row=7, stick=W)
 
 # Options Check marks
 dockButton1 = Checkbutton(window, text='Yes', var=dockButton1var)
@@ -99,6 +105,7 @@ metricButton1 = Checkbutton(window, text='Yes', var=metricButton1var)
 metricButton2 = Checkbutton(window, text='No', var=metricButton2var)
 venndiagramButton1 = Checkbutton(window, text='Yes', var=venndiagramButton1var)
 venndiagramButton2 = Checkbutton(window, text='No', var=venndiagramButton2var)
+checkDockButton1 = Checkbutton(window, text='Yes', var=checkDockButton1var)
 
 # Options Check marks Placement
 dockButton1.grid(column=1, row=1)
@@ -113,6 +120,7 @@ metricButton1.grid(column=1, row=5)
 metricButton2.grid(column=2, row=5)
 venndiagramButton1.grid(column=1, row=6)
 venndiagramButton2.grid(column=2, row=6)
+checkDockButton1.grid(column=1, row=7)
 
 
 def userDirectory():
@@ -152,9 +160,13 @@ antibodyButton.grid(column=12, row=1)
 
 def dockClicked():
     dockOutcome = (dockButton1var.get())
+    checkdockOutcome = (checkDockButton1var.get())
     # print(dockOutcome)
     if dockOutcome == 1:
         LetsDock()
+    else:
+        if checkdockOutcome == 1:
+            waitTime()
 
 
 submitButton = Button(window, text="Submit", command=dockClicked)
@@ -165,6 +177,7 @@ def LetsDock():
     os.chdir(str(theirDirectory))
     antibodyFile = antibodyfileName
     antigenFile = antigenfileName
+    dockWindow = Tk()
     # print(antibodyFile)
     # print(antigenFile)
     # print(os.system('pwd'))
@@ -202,9 +215,6 @@ def LetsDock():
         finalID = str(finalID)
         print('This is your JobID : %s' % finalID)
         taskComplete = 0
-        # Pausing for 1 hour
-        # time.sleep(60)
-
         while taskComplete == 0:
             print('Checking agian in:')
             countdown(1800)
@@ -223,15 +233,75 @@ def LetsDock():
 
         print('Job is Completed')
         expandFolder()
+
     Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
 
-def expandFolder():
+
+
+def waitTime():
+    waitWindow = Tk()
+    waitWindow.geometry('300x100')
+    waitWindow.title("Input iD")
+    Label(waitWindow, text='Job ID ').grid(row=1)
+    Label(waitWindow, text='Job Name').grid(row=0)
+    Label(waitWindow, text='Antibody Chain').grid(row=2)
+    Label(waitWindow, text='Antigen Chain').grid(row=3)
+    idNumber = Entry(waitWindow)
+    idNumber.grid(row=1, column=1)
+    jobName = Entry(waitWindow)
+    jobName.grid(row=0, column=1)
+    abchain = Entry(waitWindow)
+    abchain.grid(row=2, column=1)
+    antichain = Entry(waitWindow)
+    antichain.grid(row=3, column=1)
+
+    def theCheck():
+        taskComplete = 0
+        global finalID
+        finalID = idNumber.get()
+        finalID = str(finalID)
+        global finaljobName
+        finaljobName = jobName.get()
+        finaljobName = str(finaljobName)
+        global antibodyChain
+        antibodyChain = abchain.get()
+        global antigenChain
+        antigenChain = antichain.get()
+        while taskComplete == 0:
+
+            p = subprocess.run(["cluspro_download", finalID], stderr=subprocess.PIPE)
+            output = p.stderr
+            output = output.decode('utf-8')
+            # print(str(output))
+            # print(output.decode('utf-8'))
+            myMessage = 'Downloading ' + finalID + '...ERROR \nJob not finished'
+            # print(myMessage)
+            if str(output[0:25]) == str(myMessage[0:25]):
+                print("Still Cooking")
+                print('Checking agian in:')
+                countdown(1800)
+            else:
+                taskComplete = 1
+
+        print('Job is Completed')
+        print(finalID)
+        expandFolder(finalID, finaljobName)
+    Button(waitWindow, text='Submit', command=theCheck).grid(row=5, column=1, stick=W, pady=4)
+
+
+
+def expandFolder(finalID, finaljobName):
+    finalID = str(finalID)
     # After download will need to untar the folder to get into it
     os.chdir(str(theirDirectory))
+    # print('instance 1 = '+os.system('ls'))
     fileTar = tarfile.open('cluspro.' + finalID + '.tar.bz2')
+    # print('instance 2 = '+os.system('ls'))
     fileTar.extractall()
+    # print('instance 3 = '+os.system('ls'))
     os.chdir('cluspro.%s' % finalID)
+    # print('instance 4 = '+os.system('ls'))
     cr.theRename(str(finaljobName))
     # Sorting everything into clean folders
     os.mkdir('Balanced_models')
@@ -250,6 +320,15 @@ def expandFolder():
     dirLength = [f for f in os.listdir('.') if re.search(r'vdw', f)]
     for vdw in range(0, len(dirLength)):
         shutil.move(dirLength[vdw], 'Vdw_models')
+    if interactionButton1var.get() == 1:
+        makeInteraction()
+    else:
+        if interactionButton1var.get() == 0 and heatmapButton1var.get() == 1:
+            print('You need to generate interaction tables to make heatmap')
+        else:
+            return
+
+
 
 # Interaction Table generation
 
@@ -258,6 +337,7 @@ def interClicked():
     if interOutcome == 1:
         makeInteraction()
 def makeInteraction():
+    print('Making Interaction Tables')
     os.chdir(str(theirDirectory))
     os.chdir('cluspro.' + finalID)
     os.chdir('Balanced_models')
@@ -269,6 +349,10 @@ def makeInteraction():
     itDir = [f for f in os.listdir('.') if re.search(r'_table_', f)]
     for interTable in range(0, len(itDir)):
         shutil.move(itDir[interTable], str(finaljobName) + '_interaction_tables')
+    if heatmapButton1var.get() == 1:
+        createHeatmap()
+    else:
+        return
 
 
 # Heatmap generation
@@ -278,6 +362,7 @@ def heatmapClicked():
     if heatmapOutcome == 1:
         createHeatmap()
 def createHeatmap():
+    print("Generating Heat map")
     os.chdir(str(finaljobName) + '_interaction_tables')
     hm.heatmap(str(finaljobName))
 

@@ -17,25 +17,15 @@ from tkinter.ttk import *
 from tkinter import filedialog
 
 from tkinter import scrolledtext
+from glob import glob
 
 
-timerWindow = Tk()
+os.chdir('/tmp/ligplot')
+interDir = glob('/tmp/ligplot'+'/*/')
+interDir = interDir[0].split('/')
 
-def countdown(t):
-    while t > 0:
-        mins, secs = divmod(t, 60)
-        timeformat = '{:02d}:{:02d}'.format(mins, secs)
-        timerWindow.geometry('200x100')
-        timerWindow.title('Attempting Download In:')
-        Label(timerWindow, text=timeformat).grid(column=6, row=0)
-        print(timeformat, end='\r')
-        # time.sleep(1)
-        t = t-1
-        timerWindow.mainloop()
-
-
-countdown(3)
-
+os.system('cp -R '+str(interDir[3])+ ' ~/Desktop/Mytest')
+print(interDir[3])
 
 
 
