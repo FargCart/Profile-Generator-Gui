@@ -31,9 +31,7 @@ import heatmapGen as hm
 
 import cluspro_put_together as pt
 
-
 window = Tk()
-
 
 
 
@@ -365,6 +363,19 @@ def createHeatmap():
     print("Generating Heat map")
     os.chdir(str(finaljobName) + '_interaction_tables')
     hm.heatmap(str(finaljobName))
+
+
+#Opening Clustering Program
+
+def clusteringClicked():
+    clusterOutcome = (clustButton1var.get())
+    if clusterOutcome == 1:
+        createCluster()
+
+
+def createCluster():
+    print('Opening Clustering Program')
+    os.system("R -e \"shiny::runApp('brooks_V4.1',launch.browser=TRUE)\"")
 
 
 

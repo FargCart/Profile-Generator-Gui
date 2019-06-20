@@ -26,6 +26,11 @@ interDir = interDir[0].split('/')
 
 os.system('cp -R '+str(interDir[3])+ ' ~/Desktop/Mytest')
 print(interDir[3])
+# os.chdir('/Users/AdamClosmore/Desktop')
+# os.system('pwd')
+#
+# # print('R -e "shiny::runApp("brooks_V4.1",launch.browser=TRUE)"')
+# os.system("R -e \"shiny::runApp('brooks_V4.1',launch.browser=TRUE)\"")
 
 
 
