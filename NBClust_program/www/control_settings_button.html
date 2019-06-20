@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; c
+
+<style type="text/css"></style>
+<style type="text/css">
+
+/* ############################## button swicth ############################# */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 112px;
+  height: 36px;
+  border: 1px solid #DCDCDC;
+  border-radius: 2px;
+}
+
+ .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;	/* background static */
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 38px;
+  width: 25px;
+  left:-1px;
+  bottom: -1px;
+  top: -2px;
+  border-radius: 4px;
+  background-color: #337ab7; /* background da barra q movimenta */
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color:white; /* backgrou dinamic */
+}
+
+
+input:focus + .slider {
+  box-shadow: 0 0 0 black;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(50px);
+  -ms-transform: translateX(50px);
+  transform: translateX(88px); /* quanto vai movimentar*/
+}
+
+.text {
+  color:white;
+}
+
+.text:after {
+  position: absolute;
+  font-size: 14px;
+  top: 6px;
+  right: 18px;
+  font-weight: 400;
+  color:#333333;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  content: "Clustering";
+  -webkit-transition: opacity 0.5s ease-in-out;
+  -moz-transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
+}
+.text:before {
+  position: absolute;
+  font-size: 14px;
+  font-weight: 400;
+  color:#333333;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  top: 6px;
+  left: 19px;
+  content: "Network";
+  -webkit-transition: opacity 0.5s ease-in-out;
+  -moz-transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
+}
+
+input + .slider + .text:after {
+  opacity: 1;
+}
+input + .slider + .text:before {
+  opacity: 0;
+}
+
+
+input:checked + .slider + .text:after {
+  opacity: 0;
+}
+
+input:checked + .slider + .text:before {
+  opacity: 1;
+}
+
+.total_size{
+  width: 100%;
+  display: block;
+  margin: auto;
+}
+
+#interative_switch{
+  position: absolute;
+  left:548px;
+}
+
+/* ############################################################################### */
+</style>
+
+<body>
+
+<div class="total_size">
+<div id="interative_switch">
+<label class="switch">
+  <input id="control_settings" type="checkbox">
+  <div class="slider"></div>
+  <div class="text"></div>
+</label>
+</div>
+</div>
+
+
+</head>
+
+
+</body>
+
+</html>

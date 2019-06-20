@@ -1,0 +1,205 @@
+#col{
+  position: absolute;
+  width: 60px;
+  left: 250px;
+  top: -84px;
+}
+
+#downloadBtn{
+  padding: 10px;
+  margin-left: 15px;
+}
+
+#downloadBtn_dend{
+   margin-left: 40px;
+}
+
+#colgroups{
+  position: absolute;
+  width: 60px;
+  left: 250px;
+  top: -84px;
+}
+
+#colChangegroups{
+  position: absolute;
+  width: 60px;
+  left: 250px;
+  top: -84px;
+}
+
+body {
+  background: url("background.jpg") repeat;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+.selectize-control{
+  width:240px;
+  display:inline-block;
+}
+
+#community_algorithms_div{
+  width:300px;
+}
+
+#settings_div_networking, #settings_div_clustering{
+  margin-top:80px;
+}
+
+#community_algorithms{
+  width: 200px;
+}
+
+#loading{
+  width: 40px;
+  margin-left: 20px;
+  border: 0;
+}
+
+#div_control_settings{
+    display: inline;
+    width:100%;
+}
+
+#headerSection {
+  background: #333;
+  margin: -25px 0 20px;
+  color: #FAFAFA;
+  padding: 15px 20px;
+  box-shadow: 0 0 7px #000;
+} 
+
+#headerSection a {
+  color: white !important;
+  text-decoration: underline;
+}
+
+#net_div{
+  width: 780px;
+  margin-left: -15px;
+
+}
+
+#group_div{
+  width: 780px;
+  margin-left: -15px;
+}
+
+#allContent,
+#loadingContent {
+  padding: 0 20px;
+}
+
+.nav-tabs > li > a {
+  font-size: 1.5em;
+}
+
+#dataTable > table {
+  background: #FAFAFA;
+}
+
+.well {
+  background: #FCFCFC;
+}
+
+
+#updateBtn {
+  font-size: 1.3em;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+
+#type_analysis {
+  margin-left: 200px;
+}
+
+#Graph_orientation {
+  margin-left: 80px;
+}
+
+#link_algorithm {
+   margin-left: 200px;
+}
+
+#yearText {
+  display: inline;
+}
+
+#loading{
+  margin-left: 160px;
+  margin-top: -65px;
+  width: 45px;
+}
+
+button.btn-primary:not(.lg-btn) {
+  font-size: 1.2em;
+  margin: auto;
+  display: block;
+  position: relative;
+  margin-top: 100px;
+  text-align: center;
+}
+
+button.btn-primary.lg-btn {
+  padding: 10px 20px;
+}
+
+
+.btn-loading-container {
+  margin-left: 10px;
+  font-size: 1.2em;
+ 
+}
+.btn-done-indicator {
+  color: green;
+  
+}
+.btn-err {
+  margin-top: 100px;
+  color: red;
+}
+
+
+#runAnalysisBtn{
+  padding: 8px 12px;
+  font-size: 1.2em;
+  margin-top: 13px;
+  display: block;
+  position: relative;
+  display: block;
+  background-color: #337AB7; 
+  color: #ffffff;
+}
+
+#loadGroupsBtn{
+  padding: 8px 12px;
+  font-size: 1.2em;
+  background-color: #337AB7; 
+  color: #ffffff;
+}
+
+#subBestKBtn{
+  padding: 10px 20px;
+  margin-top: 15px;
+  margin-left: 45px;
+  display: block;
+  background-color: #337AB7; 
+  color: #ffffff;
+}
+
+#caption{
+  display: block;
+  padding: 20px;
+}
+
+#exampleDataFile{
+  font-size: 1.0em;
+  font-weight: normal;
+}
+
+.btn-done-indicator {
+  color: green;
+}
