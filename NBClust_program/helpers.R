@@ -15,14 +15,14 @@ if("dendextend" %in% rownames(installed.packages()) == FALSE) {
   #devtools::install_github('talgalili/dendextendRcpp')
 }
 if("WGCNA" %in% rownames(installed.packages()) == FALSE){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore"))
+    # source("http://bioconductor.org/biocLite.R")
+  BiocManager::install(c("AnnotationDbi", "impute", "GO.db", "preprocessCore"))
   install.packages("WGCNA") 
 }
 if("DT" %in% rownames(installed.packages()) == FALSE){ install.packages("DT") }
 if("SANTA" %in% rownames(installed.packages()) == FALSE){ 
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("SANTA") }
+  # source("http://bioconductor.org/biocLite.R")
+  BiocManager::install("SANTA") }
 if("igraph" %in% rownames(installed.packages()) == FALSE){ install.packages("igraph") }
 if("colourpicker" %in% rownames(installed.packages()) == FALSE){ install.packages("colourpicker") }
 if("visNetwork" %in% rownames(installed.packages()) == FALSE){ install.packages("visNetwork") }
