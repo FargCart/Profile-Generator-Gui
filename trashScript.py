@@ -20,12 +20,12 @@ from tkinter import scrolledtext
 from glob import glob
 
 
-os.chdir('/tmp/ligplot')
-interDir = glob('/tmp/ligplot'+'/*/')
-interDir = interDir[0].split('/')
-
-os.system('cp -R '+str(interDir[3])+ ' ~/Desktop/Mytest')
-print(interDir[3])
+# os.chdir('/tmp/ligplot')
+# interDir = glob('/tmp/ligplot'+'/*/')
+# interDir = interDir[0].split('/')
+#
+# os.system('cp -R '+str(interDir[3])+ ' ~/Desktop/Mytest')
+# print(interDir[3])
 # os.chdir('/Users/AdamClosmore/Desktop')
 # os.system('pwd')
 #
@@ -33,8 +33,8 @@ print(interDir[3])
 # os.system("R -e \"shiny::runApp('brooks_V4.1',launch.browser=TRUE)\"")
 
 
-
-
+os.system('pwd')
+os.system('/home/lab/Desktop/Profile-Generator-Gui-master/Programs/Schrodinger-2019/run protein_interaction_analysis.py')
 
 
 

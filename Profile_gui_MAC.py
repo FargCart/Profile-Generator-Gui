@@ -30,8 +30,29 @@ import split_CSV as sc
 import heatmapGen as hm
 
 import cluspro_put_together as pt
+import excel_converter as ec
 
+
+
+
+# Window Setup
 window = Tk()
+
+# Gets the requested values of the height and widht.
+windowWidth = window.winfo_reqwidth()
+windowHeight = window.winfo_reqheight()
+# print("Width", windowWidth, "Height", windowHeight)
+
+# Gets both half the screen width/height and window width/height
+positionRight = int(window.winfo_screenwidth() / 2 - windowWidth / 2)
+positionDown = int(window.winfo_screenheight() / 2 - windowHeight / 2)
+
+# Positions the window in the center of the page.
+window.geometry("+{}+{}".format(positionRight, positionDown))
+
+
+
+
 
 
 
@@ -39,6 +60,9 @@ chk_state = BooleanVar()
 chk_state.set(False)
 
 
+
+
+# Used to make Checkdock wait a certain amount of time before checking again
 def countdown(t):
     while t:
         mins, secs = divmod(t, 60)
@@ -49,7 +73,9 @@ def countdown(t):
         t -= 1
 
 
-window.geometry('600x300')
+# window.geometry('600x300')
+
+
 window.title("Antibody-Antigen Profile Generator")
 antibodyWindow = scrolledtext.ScrolledText(window, width=20, height=10)
 antigenWindow = scrolledtext.ScrolledText(window, width=20, height=10)
@@ -120,7 +146,7 @@ venndiagramButton1.grid(column=1, row=6)
 venndiagramButton2.grid(column=2, row=6)
 checkDockButton1.grid(column=1, row=7)
 
-
+#Getting their directory they will be working in (THIS IS A REQ INPUT)
 def userDirectory():
     global theirDirectory
     theirDirectory = filedialog.askdirectory()
@@ -129,7 +155,7 @@ def userDirectory():
 directoryButton = Button(window, text="Select Directory", command=userDirectory)
 directoryButton.grid(column=0, row=0)
 
-
+# Loading the receptor
 def antigenClicked():
     antigenFile = filedialog.askopenfilename(initialdir=str(os.system("pwd")), title="Select Antigen file",
                                              filetypes=(("pdb files", "*.pdb"), ("all files", "*.*")))
@@ -142,7 +168,7 @@ def antigenClicked():
 antigenButton = Button(window, text='Select Antigen PDB', command=antigenClicked)
 antigenButton.grid(column=10, row=1)
 
-
+# Loading the Ab
 def antibodyClicked():
     antibodyFile = filedialog.askopenfilename(initialdir=str(os.system("pwd")), title="Select Antibody file",
                                               filetypes=(("pdb files", "*.pdb"), ("all files", "*.*")))
@@ -155,7 +181,7 @@ def antibodyClicked():
 antibodyButton = Button(window, text='Select Antibody PDB', command=antibodyClicked)
 antibodyButton.grid(column=12, row=1)
 
-
+# Checking if user wants to dock
 def dockClicked():
     dockOutcome = (dockButton1var.get())
     checkdockOutcome = (checkDockButton1var.get())
@@ -163,23 +189,31 @@ def dockClicked():
     if dockOutcome == 1:
         LetsDock()
     else:
-        if checkdockOutcome == 1:
+        if checkdockOutcome == 1: #This is ran if the user has already submitted a dock
             waitTime()
 
 
 submitButton = Button(window, text="Submit", command=dockClicked)
 submitButton.grid(column=12, row=6)
 
-
+# Starting the dock process
 def LetsDock():
     os.chdir(str(theirDirectory))
     antibodyFile = antibodyfileName
     antigenFile = antigenfileName
     dockWindow = Tk()
-    # print(antibodyFile)
-    # print(antigenFile)
-    # print(os.system('pwd'))
-    dockWindow.geometry('300x100')
+    # Gets the requested values of the height and widht.
+    windowWidth = dockWindow.winfo_reqwidth()
+    windowHeight = dockWindow.winfo_reqheight()
+    print("Width", windowWidth, "Height", windowHeight)
+
+    # Gets both half the screen width/height and window width/height
+    positionRight = int(dockWindow.winfo_screenwidth() / 2 - windowWidth / 2)
+    positionDown = int(dockWindow.winfo_screenheight() / 2 - windowHeight / 2)
+
+    # Positions the window in the center of the page.
+    dockWindow.geometry("+{}+{}".format(positionRight, positionDown))
+
     dockWindow.title("Chain Select")
     Label(dockWindow, text='Job Name').grid(row=0)
     Label(dockWindow, text='Antigen Chain').grid(row=1)
@@ -236,7 +270,7 @@ def LetsDock():
 
 
 
-
+# Used to check a dock that has already been submitted
 def waitTime():
     waitWindow = Tk()
     waitWindow.geometry('300x100')
@@ -288,7 +322,7 @@ def waitTime():
     Button(waitWindow, text='Submit', command=theCheck).grid(row=5, column=1, stick=W, pady=4)
 
 
-
+# Changing the naming of Cluspro docks to something more usable
 def expandFolder(finalID, finaljobName):
     finalID = str(finalID)
     # After download will need to untar the folder to get into it
@@ -341,8 +375,8 @@ def makeInteraction():
     os.chdir('Balanced_models')
 
     pt.putTogether(str(finaljobName))
-    pia.proteinInteraction(str(finaljobName), str(antibodyChain), str(antigenChain))
-    sc.csvParser(str(finaljobName) + "_interaction_tables.csv", )
+    pia.proteinInteraction(str(finaljobName), str(antibodyChain), str(antigenChain),str(theirDirectory))
+    sc.csvParser(str(finaljobName) + "_interaction_tables.csv", str(finaljobName) )
     os.mkdir(str(finaljobName) + '_interaction_tables')
     itDir = [f for f in os.listdir('.') if re.search(r'_table_', f)]
     for interTable in range(0, len(itDir)):
@@ -363,9 +397,12 @@ def createHeatmap():
     print("Generating Heat map")
     os.chdir(str(finaljobName) + '_interaction_tables')
     hm.heatmap(str(finaljobName))
+    ec.converter(str(finaljobName) + '_Heatmap')
 
 
-#Opening Clustering Program
+
+
+# Opening Clustering Program (NBclust)
 
 def clusteringClicked():
     clusterOutcome = (clustButton1var.get())
