@@ -1,0 +1,133 @@
+Residue,Closest,Distance,Specific Interactions,# HB,"# Salt
+Bridges","# Pi
+Stacking","#
+Disulfides","# vdW
+Clash","Surface
+Complementarity","Buried
+SASA"
+L:2:Ile,,,,0,0,0,0,0,0.00,36.7%
+A:132:Gln,"H:58:Ser
+H:57:Thr","2.9 A
+3.7 A",1x clash to H:58:Ser,0,0,0,0,1,0.68,18.9%
+A:94:Asn,,,,0,0,0,0,0,0.23,37.6%
+H:58:Ser,"A:36:Arg
+A:132:Gln
+A:38:Tyr
+A:37:Val","2.8 A
+2.9 A
+3.1 A
+3.4 A","1x hb to A:36:Arg
+1x clash to A:132:Gln",1,0,0,0,1,0.63,96.4%
+L:32:Asn,A:42:Pro,3.9 A,,0,0,0,0,0,0.46,67.7%
+A:91:His,L:28:Ser,3.3 A,,0,0,0,0,0,0.00,22.6%
+A:215:Asp,"H:53:Tyr
+H:51:Asn
+H:100:Tyr
+H:30:Asp","2.7 A
+3.0 A
+3.2 A
+4.0 A","1x hb to H:51:Asn
+3x clash to H:53:Tyr",1,0,0,0,3,0.64,91.7%
+A:37:Val,"H:58:Ser
+L:94:Trp","3.4 A
+3.9 A",,0,0,0,0,0,0.53,92.6%
+H:101:Tyr,A:216:Ser,4.0 A,,0,0,0,0,0,0.32,14.6%
+A:116:Thr,L:93:Arg,3.7 A,,0,0,0,0,0,0.47,100.0%
+H:57:Thr,"A:38:Tyr
+A:132:Gln","2.8 A
+3.7 A","1x hb, 1x clash to A:38:Tyr",1,0,0,0,1,0.82,32.7%
+L:1:Asp,A:35:Lys,2.4 A,"1x hb, 1x salt bridge, 4x clash to A:35:Lys",1,1,0,0,4,0.63,25.2%
+H:46:Trp,,,,0,0,0,0,0,0.14,2.1%
+H:50:Ile,,,,0,0,0,0,0,0.03,0.0%
+A:117:Glu,"L:93:Arg
+L:27:His","2.8 A
+3.0 A","1x hb, 2x clash to L:27:His
+1x salt bridge, 2x clash to L:93:Arg",1,1,0,0,4,0.57,70.6%
+H:100:Tyr,"A:213:Thr
+A:215:Asp
+A:216:Ser","3.1 A
+3.2 A
+3.5 A",,0,0,0,0,0,0.76,78.1%
+A:90:Lys,,,,0,0,0,0,0,0.00,2.9%
+A:220:Leu,H:53:Tyr,3.7 A,,0,0,0,0,0,0.62,27.3%
+A:219:Met,H:53:Tyr,4.0 A,,0,0,0,0,0,0.69,0.0%
+A:210:Gln,,,,0,0,0,0,0,0.00,0.7%
+H:61:Gln,,,,0,0,0,0,0,0.00,0.5%
+A:42:Pro,L:32:Asn,3.9 A,,0,0,0,0,0,0.05,63.8%
+A:129:Ile,"L:94:Trp
+L:93:Arg","3.1 A
+4.0 A",,0,0,0,0,0,0.50,99.6%
+L:27:His,A:117:Glu,3.0 A,"1x hb, 2x clash to A:117:Glu",1,0,0,0,2,0.62,29.1%
+L:94:Trp,"A:129:Ile
+A:35:Lys
+A:37:Val","3.1 A
+3.4 A
+3.9 A",,0,0,0,0,0,0.58,81.6%
+A:36:Arg,H:58:Ser,2.8 A,1x hb to H:58:Ser,1,0,0,0,0,0.44,27.2%
+L:91:Thr,,,,0,0,0,0,0,0.00,37.6%
+A:211:Gly,,,,0,0,0,0,0,0.00,22.7%
+L:96:Tyr,,,,0,0,0,0,0,0.02,28.8%
+A:41:Gln,"L:92:Asn
+L:30:Asn","3.0 A
+3.5 A","1x hb, 1x clash to L:92:Asn",1,0,0,0,1,0.55,60.3%
+A:92:Thr,L:93:Arg,2.7 A,"1x hb, 2x clash to L:93:Arg",1,0,0,0,2,0.53,65.8%
+A:213:Thr,H:100:Tyr,3.1 A,,0,0,0,0,0,0.80,89.0%
+A:216:Ser,"H:100:Tyr
+H:101:Tyr","3.5 A
+4.0 A",,0,0,0,0,0,0.79,44.2%
+A:214:Val,,,,0,0,0,0,0,0.08,0.0%
+L:50:Phe,,,,0,0,0,0,0,0.00,27.9%
+L:93:Arg,"A:92:Thr
+A:117:Glu
+A:116:Thr
+A:129:Ile","2.7 A
+2.8 A
+3.7 A
+4.0 A","1x hb, 2x clash to A:92:Thr
+1x salt bridge, 2x clash to A:117:Glu",1,1,0,0,4,0.55,94.2%
+L:92:Asn,"A:40:Ile
+A:41:Gln","2.9 A
+3.0 A","1x hb to A:40:Ile
+1x hb, 1x clash to A:41:Gln",2,0,0,0,1,0.55,99.1%
+H:53:Tyr,"A:215:Asp
+A:134:Arg
+A:221:Pro
+A:220:Leu
+A:218:Gly
+A:219:Met","2.7 A
+3.0 A
+3.4 A
+3.7 A
+3.9 A
+4.0 A","2x clash to A:134:Arg
+3x clash to A:215:Asp",0,0,0,0,5,0.64,60.7%
+L:28:Ser,A:91:His,3.3 A,,0,0,0,0,0,0.00,49.0%
+H:30:Asp,A:215:Asp,4.0 A,,0,0,0,0,0,0.52,12.8%
+A:38:Tyr,"H:57:Thr
+H:58:Ser
+H:56:Gly
+H:49:Leu","2.8 A
+3.1 A
+3.3 A
+3.6 A","1x hb, 1x clash to H:57:Thr",1,0,0,0,1,0.48,87.0%
+H:49:Leu,A:38:Tyr,3.6 A,,0,0,0,0,0,0.31,97.6%
+H:54:Asn,A:221:Pro,3.4 A,,0,0,0,0,0,0.31,34.4%
+A:40:Ile,L:92:Asn,2.9 A,1x hb to L:92:Asn,1,0,0,0,0,0.61,93.5%
+A:35:Lys,"L:1:Asp
+L:94:Trp","2.4 A
+3.4 A","1x hb, 1x salt bridge, 4x clash to L:1:Asp",1,1,0,0,4,0.63,66.7%
+H:98:Tyr,A:39:His,3.0 A,"1x pi stack, 2x clash to A:39:His",0,0,1,0,2,0.54,69.6%
+H:56:Gly,A:38:Tyr,3.3 A,,0,0,0,0,0,0.39,61.3%
+H:59:Tyr,,,,0,0,0,0,0,0.00,1.8%
+A:221:Pro,"H:53:Tyr
+H:54:Asn","3.4 A
+3.4 A",,0,0,0,0,0,0.53,69.8%
+A:218:Gly,H:53:Tyr,3.9 A,,0,0,0,0,0,0.75,40.9%
+L:30:Asn,A:41:Gln,3.5 A,,0,0,0,0,0,0.00,18.9%
+A:134:Arg,H:53:Tyr,3.0 A,2x clash to H:53:Tyr,0,0,0,0,2,0.28,100.0%
+H:51:Asn,A:215:Asp,3.0 A,1x hb to A:215:Asp,1,0,0,0,0,0.16,94.7%
+H:32:Thr,A:39:His,2.9 A,1x hb to A:39:His,1,0,0,0,0,0.20,95.9%
+A:39:His,"H:32:Thr
+H:98:Tyr","2.9 A
+3.0 A","1x hb to H:32:Thr
+1x pi stack, 2x clash to H:98:Tyr",1,0,1,0,2,0.46,82.9%
