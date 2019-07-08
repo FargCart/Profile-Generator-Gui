@@ -97,7 +97,7 @@ def heatmap(name):
 
         # append title of the result file
         dockTitle=[]
-        dockTitle.append(" ")
+        dockTitle.append("")
         for i in range(0,len(tableOfInteractionList)):
             dockTitle.append(str(titleList[int(existNumbers[i]/DockPerAntibody)])+"_dock_"+str(int(existNumbers[i]%DockPerAntibody)))
 

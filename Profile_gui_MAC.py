@@ -30,36 +30,42 @@ import split_CSV as sc
 import heatmapGen as hm
 
 import cluspro_put_together as pt
+
 import excel_converter as ec
 
+import Sort_my_bins as sb
+
+import Create_bins_together as cbt
+
+import Totals_Script as ts
+
+import percentr_contribution as pc
+
+import MolHeat as molH
 
 
+
+def center(win):
+    """
+    centers a tkinter window
+    :param win: the root or Toplevel window to center
+    """
+    win.update_idletasks()
+    width = win.winfo_width()
+    frm_width = win.winfo_rootx() - win.winfo_x()
+    win_width = width + 2 * frm_width
+    height = win.winfo_height()
+    titlebar_height = win.winfo_rooty() - win.winfo_y()
+    win_height = height + titlebar_height + frm_width
+    x = win.winfo_screenwidth() // 2 - win_width // 2
+    y = win.winfo_screenheight() // 2 - win_height // 2
+    win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+    win.deiconify()
 
 # Window Setup
 window = Tk()
-
-# Gets the requested values of the height and widht.
-windowWidth = window.winfo_reqwidth()
-windowHeight = window.winfo_reqheight()
-# print("Width", windowWidth, "Height", windowHeight)
-
-# Gets both half the screen width/height and window width/height
-positionRight = int(window.winfo_screenwidth() / 2 - windowWidth / 2)
-positionDown = int(window.winfo_screenheight() / 2 - windowHeight / 2)
-
-# Positions the window in the center of the page.
-window.geometry("+{}+{}".format(positionRight, positionDown))
-
-
-
-
-
-
-
 chk_state = BooleanVar()
 chk_state.set(False)
-
-
 
 
 # Used to make Checkdock wait a certain amount of time before checking again
@@ -73,7 +79,8 @@ def countdown(t):
         t -= 1
 
 
-# window.geometry('600x300')
+window.geometry('600x400')
+center(window)
 
 
 window.title("Antibody-Antigen Profile Generator")
@@ -96,25 +103,33 @@ metricButton1var = IntVar()
 metricButton2var = IntVar()
 venndiagramButton1var = IntVar()
 venndiagramButton2var = IntVar()
+mhButton1var = IntVar()
+mhButton2var = IntVar()
 checkDockButton1var = IntVar()
+halfButton1var = IntVar()
 
 # Options
 dockLabel = Label(window, text="Docking", font='Helivtica')
 interactionLabel = Label(window, text="Interaction table", font='Helivitca')
 heatmapLabel = Label(window, text="Heatmap", font='Helivtica')
 clusterLabel = Label(window, text="Cluster", font='Helivtica')
+mhLabel = Label(window, text="Molecular Heatmap", font="Helivitica")
 metricsLabel = Label(window, text="Metrics", font='Helivtica')
 venndiagram = Label(window, text="Venn Diagram", font='Helivtica')
 checkDock = Label(window, text="Check Dock", font='Helivtica')
+halfWay = Label(window, text="Interactions_done", font='Helivtica')
 
 # Options Placement
 dockLabel.grid(column=0, row=1, sticky=W)
 interactionLabel.grid(column=0, row=2, sticky=W)
 heatmapLabel.grid(column=0, row=3, sticky=W)
 clusterLabel.grid(column=0, row=4, sticky=W)
-metricsLabel.grid(column=0, row=5, sticky=W)
-venndiagram.grid(column=0, row=6, stick=W)
-checkDock.grid(column=0, row=7, stick=W)
+mhLabel.grid(column=0, row=5, sticky=W)
+metricsLabel.grid(column=0, row=6, sticky=W)
+venndiagram.grid(column=0, row=7, stick=W)
+checkDock.grid(column=0, row=8, stick=W)
+halfWay.grid(column=0, row=9, stick=W)
+
 
 # Options Check marks
 dockButton1 = Checkbutton(window, text='Yes', var=dockButton1var)
@@ -125,11 +140,14 @@ heatmapButton1 = Checkbutton(window, text='Yes', var=heatmapButton1var)
 heatmapButton2 = Checkbutton(window, text='No', var=heatmapButton2var)
 clustButton1 = Checkbutton(window, text='Yes', var=clustButton1var)
 clustButton2 = Checkbutton(window, text='No', var=clustButton2var)
+mhButton1 = Checkbutton(window, text='Yes', var=mhButton1var)
+mhButton2 = Checkbutton(window, text='No', var=mhButton2var)
 metricButton1 = Checkbutton(window, text='Yes', var=metricButton1var)
 metricButton2 = Checkbutton(window, text='No', var=metricButton2var)
 venndiagramButton1 = Checkbutton(window, text='Yes', var=venndiagramButton1var)
 venndiagramButton2 = Checkbutton(window, text='No', var=venndiagramButton2var)
 checkDockButton1 = Checkbutton(window, text='Yes', var=checkDockButton1var)
+halfwayButton1 = Checkbutton(window, text='Yes', var=halfButton1var)
 
 # Options Check marks Placement
 dockButton1.grid(column=1, row=1)
@@ -140,11 +158,14 @@ heatmapButton1.grid(column=1, row=3)
 heatmapButton2.grid(column=2, row=3)
 clustButton1.grid(column=1, row=4)
 clustButton2.grid(column=2, row=4)
-metricButton1.grid(column=1, row=5)
-metricButton2.grid(column=2, row=5)
-venndiagramButton1.grid(column=1, row=6)
-venndiagramButton2.grid(column=2, row=6)
-checkDockButton1.grid(column=1, row=7)
+mhButton1.grid(column=1, row=5)
+mhButton2.grid(column=2, row=5)
+metricButton1.grid(column=1, row=6)
+metricButton2.grid(column=2, row=6)
+venndiagramButton1.grid(column=1, row=7)
+venndiagramButton2.grid(column=2, row=7)
+checkDockButton1.grid(column=1, row=8)
+halfwayButton1.grid(column=1, row=9)
 
 #Getting their directory they will be working in (THIS IS A REQ INPUT)
 def userDirectory():
@@ -185,35 +206,30 @@ antibodyButton.grid(column=12, row=1)
 def dockClicked():
     dockOutcome = (dockButton1var.get())
     checkdockOutcome = (checkDockButton1var.get())
+    checkhalfOutcome = (halfButton1var.get())
     # print(dockOutcome)
     if dockOutcome == 1:
         LetsDock()
     else:
         if checkdockOutcome == 1: #This is ran if the user has already submitted a dock
             waitTime()
+        else:
+            if checkhalfOutcome == 1:
+                halfwayThere()
 
 
 submitButton = Button(window, text="Submit", command=dockClicked)
 submitButton.grid(column=12, row=6)
 
+# ---------------------------------------------------------------------------------------------------------
 # Starting the dock process
 def LetsDock():
     os.chdir(str(theirDirectory))
     antibodyFile = antibodyfileName
     antigenFile = antigenfileName
     dockWindow = Tk()
-    # Gets the requested values of the height and widht.
-    windowWidth = dockWindow.winfo_reqwidth()
-    windowHeight = dockWindow.winfo_reqheight()
-    print("Width", windowWidth, "Height", windowHeight)
-
-    # Gets both half the screen width/height and window width/height
-    positionRight = int(dockWindow.winfo_screenwidth() / 2 - windowWidth / 2)
-    positionDown = int(dockWindow.winfo_screenheight() / 2 - windowHeight / 2)
-
-    # Positions the window in the center of the page.
-    dockWindow.geometry("+{}+{}".format(positionRight, positionDown))
-
+    dockWindow.geometry('300x300')
+    center(dockWindow)
     dockWindow.title("Chain Select")
     Label(dockWindow, text='Job Name').grid(row=0)
     Label(dockWindow, text='Antigen Chain').grid(row=1)
@@ -268,12 +284,12 @@ def LetsDock():
 
     Button(dockWindow, text='Submit', command=ReturnChains).grid(row=3, column=1, stick=W, pady=4)
 
-
-
+# ---------------------------------------------------------------------------------------------------------
 # Used to check a dock that has already been submitted
 def waitTime():
     waitWindow = Tk()
     waitWindow.geometry('300x100')
+    center(waitWindow)
     waitWindow.title("Input iD")
     Label(waitWindow, text='Job ID ').grid(row=1)
     Label(waitWindow, text='Job Name').grid(row=0)
@@ -321,7 +337,7 @@ def waitTime():
         expandFolder(finalID, finaljobName)
     Button(waitWindow, text='Submit', command=theCheck).grid(row=5, column=1, stick=W, pady=4)
 
-
+# ---------------------------------------------------------------------------------------------------------
 # Changing the naming of Cluspro docks to something more usable
 def expandFolder(finalID, finaljobName):
     finalID = str(finalID)
@@ -362,6 +378,7 @@ def expandFolder(finalID, finaljobName):
 
 
 
+# ---------------------------------------------------------------------------------------------------------
 # Interaction Table generation
 
 def interClicked():
@@ -385,10 +402,47 @@ def makeInteraction():
         createHeatmap()
     else:
         return
+# ---------------------------------------------------------------------------------------------------------
 
+def halfwayThere(): # This is a point in which we can use alread generated interaction tables
+    halfWindow = Tk()
+    halfWindow.geometry('300x300')
+    center(halfWindow)
+    global halfwayDir
+    halfwayDir = filedialog.askdirectory()
 
+    # halfButton = Button(halfWindow, text="Dir above Interaction tables", command=halfwayThere)
+    # halfButton.grid(column=0, row=0)
+    Label(halfWindow, text='Job ID ').grid(row=1)
+    Label(halfWindow, text='Job Name').grid(row=0)
+    Label(halfWindow, text='Antibody Chain').grid(row=2)
+    Label(halfWindow, text='Antigen Chain').grid(row=3)
+    idNumber = Entry(halfWindow)
+    idNumber.grid(row=1, column=1)
+    jobName = Entry(halfWindow)
+    jobName.grid(row=0, column=1)
+    abchain = Entry(halfWindow)
+    abchain.grid(row=2, column=1)
+    antichain = Entry(halfWindow)
+    antichain.grid(row=3, column=1)
+    def theCheck():
+        global finalID
+        finalID = idNumber.get()
+        finalID = str(finalID)
+        global finaljobName
+        finaljobName = jobName.get()
+        finaljobName = str(finaljobName)
+        global antibodyChain
+        antibodyChain = abchain.get()
+        global antigenChain
+        antigenChain = antichain.get()
+    Button(halfWindow, text='Submit', command=theCheck).grid(row=5, column=1, stick=W, pady=4)
+
+    os.chdir(str(halfwayDir))
+    createHeatmap()
+
+# ---------------------------------------------------------------------------------------------------------
 # Heatmap generation
-
 def heatmapClicked():
     heatmapOutcome = (heatmapButton1var.get())
     if heatmapOutcome == 1:
@@ -398,12 +452,16 @@ def createHeatmap():
     os.chdir(str(finaljobName) + '_interaction_tables')
     hm.heatmap(str(finaljobName))
     ec.converter(str(finaljobName) + '_Heatmap')
+    if clustButton1var.get() == 1:
+        createCluster()
+    else:
+        return
 
 
 
 
+# ---------------------------------------------------------------------------------------------------------
 # Opening Clustering Program (NBclust)
-
 def clusteringClicked():
     clusterOutcome = (clustButton1var.get())
     if clusterOutcome == 1:
@@ -412,9 +470,52 @@ def clusteringClicked():
 
 def createCluster():
     print('Opening Clustering Program')
-    os.system("R -e \"shiny::runApp('brooks_V4.1',launch.browser=TRUE)\"")
+    os.system("R -e \"shiny::runApp('NBClust_program',launch.browser=TRUE)\"")
+    if mhButton1var.get() == 1:
+        createMH()
+    else:
+        return
 
+# ---------------------------------------------------------------------------------------------------------
+# Opening Molecular Heatmap protocol
+def MHclicked():
+    mhOutcomes = (mhButton1var.get())
+    if mhOutcomes == 1:
+        createMH()
 
+def createMH():
+    os.chdir(str(theirDirectory))
+    binWindow = Tk()
+    binWindow.geometry('300x300')
+    center(binWindow)
+    binWindow.title("Community Check")
+    Label(binWindow, text='How many communities did you select?').grid(row=0)
+    Label(binWindow, text='What is the Name of NBclust file w/ extension?').grid(row=1)
+    communityBox = Entry(binWindow)
+    nbFile = Entry(binWindow)
+    communityBox.grid(row=0, column=1)
+    nbFile.grid(row=1, column=1)
+    global numCommunities
+    numCommunities = communityBox.get()
+    global nbFileName
+    nbFileName = nbFile.get()
+
+    sb.sorting(str(nbFileName))  # This will short the interaction tables into correct bins
+    cbt.cbt(numCommunities) # This will put all the .csv files in each bin together into one big file
+    ts.Totals(str(antigenChain), str(numCommunities)) # This is where to totals scripts will be created
+    pc.Percentages(numCommunities) # This will normalize the total tables and add a percentage column
+    os.chdir(str(theirDirectory))
+    os.chdir('cluspro.' + finalID)
+    os.chdir('Balanced_models')
+    os.mkdir(str(finaljobName) + "_Molecular_Heatmap")
+    mhDir = str(theirDirectory) + '/cluspro.' + str(finalID) + '/Balanced_models/' + str(finaljobName + ' Molecular_Heatmap')
+    mhDir = str(mhDir)
+    for rt in range(0, numCommunities): # This will move all the appropriate .csv files from their original dir and put them
+                                        # in a dir that is intended for all Molecular heatmap files
+        shutil.copy(str(theirDirectory) + '/cluspro.' + str(finalID) + "/Balanced_models/" + str(finaljobName) + '_interaction_tables/' +
+                    'Bin ' + str(rt+1) + "/Residue Percent Bin " + str(rt+1) , mhDir)
+    shutil.copy(str(theirDirectory) + '/' + str(antigenfileName), mhDir) # Brings the PDB to be colored to the right dir
+    molH.MolHM(mhDir, antigenfileName, finaljobName, numCommunities) # Molecular Heatmap Magic
 
 
 window.mainloop()
