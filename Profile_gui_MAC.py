@@ -404,12 +404,13 @@ def makeInteraction():
         return
 # ---------------------------------------------------------------------------------------------------------
 
-def halfwayThere(): # This is a point in which we can use alread generated interaction tables
+def halfwayThere(): # This is a point in which we can use already generated interaction tables
     halfWindow = Tk()
-    halfWindow.geometry('300x300')
+    halfWindow.geometry('500x200')
     center(halfWindow)
     global halfwayDir
-    halfwayDir = filedialog.askdirectory()
+    halfwayDir = '/home/lab/Desktop/Profile-Generator-Gui-master/cluspro.290087/Balanced_models'
+
 
     # halfButton = Button(halfWindow, text="Dir above Interaction tables", command=halfwayThere)
     # halfButton.grid(column=0, row=0)
@@ -436,10 +437,10 @@ def halfwayThere(): # This is a point in which we can use alread generated inter
         antibodyChain = abchain.get()
         global antigenChain
         antigenChain = antichain.get()
+        os.chdir(str(halfwayDir))
+        createHeatmap()
     Button(halfWindow, text='Submit', command=theCheck).grid(row=5, column=1, stick=W, pady=4)
-
-    os.chdir(str(halfwayDir))
-    createHeatmap()
+    Button(halfWindow, text='Communities Done', command=createMH).grid(row=5, column=2, stick=W, pady=4)
 
 # ---------------------------------------------------------------------------------------------------------
 # Heatmap generation
@@ -469,12 +470,14 @@ def clusteringClicked():
 
 
 def createCluster():
+    os.chdir(str(theirDirectory))
     print('Opening Clustering Program')
     os.system("R -e \"shiny::runApp('NBClust_program',launch.browser=TRUE)\"")
-    if mhButton1var.get() == 1:
-        createMH()
-    else:
-        return
+    #
+    # if mhButton1var.get() == 1:
+    #     createMH()
+    # else:
+    #     return
 
 # ---------------------------------------------------------------------------------------------------------
 # Opening Molecular Heatmap protocol
@@ -484,8 +487,10 @@ def MHclicked():
         createMH()
 
 def createMH():
+    print('Creating Molecular Heatmap')
     os.chdir(str(theirDirectory))
     binWindow = Tk()
+    binWindow.title('Molecular Heatmap')
     binWindow.geometry('300x300')
     center(binWindow)
     binWindow.title("Community Check")
@@ -499,23 +504,24 @@ def createMH():
     numCommunities = communityBox.get()
     global nbFileName
     nbFileName = nbFile.get()
-
-    sb.sorting(str(nbFileName))  # This will short the interaction tables into correct bins
-    cbt.cbt(numCommunities) # This will put all the .csv files in each bin together into one big file
-    ts.Totals(str(antigenChain), str(numCommunities)) # This is where to totals scripts will be created
-    pc.Percentages(numCommunities) # This will normalize the total tables and add a percentage column
-    os.chdir(str(theirDirectory))
-    os.chdir('cluspro.' + finalID)
-    os.chdir('Balanced_models')
-    os.mkdir(str(finaljobName) + "_Molecular_Heatmap")
-    mhDir = str(theirDirectory) + '/cluspro.' + str(finalID) + '/Balanced_models/' + str(finaljobName + ' Molecular_Heatmap')
-    mhDir = str(mhDir)
-    for rt in range(0, numCommunities): # This will move all the appropriate .csv files from their original dir and put them
-                                        # in a dir that is intended for all Molecular heatmap files
-        shutil.copy(str(theirDirectory) + '/cluspro.' + str(finalID) + "/Balanced_models/" + str(finaljobName) + '_interaction_tables/' +
-                    'Bin ' + str(rt+1) + "/Residue Percent Bin " + str(rt+1) , mhDir)
-    shutil.copy(str(theirDirectory) + '/' + str(antigenfileName), mhDir) # Brings the PDB to be colored to the right dir
-    molH.MolHM(mhDir, antigenfileName, finaljobName, numCommunities) # Molecular Heatmap Magic
+    def finishingUp():
+        sb.sorting(str(nbFileName))  # This will short the interaction tables into correct bins
+        cbt.cbt(numCommunities) # This will put all the .csv files in each bin together into one big file
+        ts.Totals(str(antigenChain), str(numCommunities)) # This is where to totals scripts will be created
+        pc.Percentages(numCommunities) # This will normalize the total tables and add a percentage column
+        os.chdir(str(theirDirectory))
+        os.chdir('cluspro.' + finalID)
+        os.chdir('Balanced_models')
+        os.mkdir(str(finaljobName) + "_Molecular_Heatmap")
+        mhDir = str(theirDirectory) + '/cluspro.' + str(finalID) + '/Balanced_models/' + str(finaljobName + ' Molecular_Heatmap')
+        mhDir = str(mhDir)
+        for rt in range(0, numCommunities): # This will move all the appropriate .csv files from their original dir and put them
+                                            # in a dir that is intended for all Molecular heatmap files
+            shutil.copy(str(theirDirectory) + '/cluspro.' + str(finalID) + "/Balanced_models/" + str(finaljobName) + '_interaction_tables/' +
+                        'Bin ' + str(rt+1) + "/Residue Percent Bin " + str(rt+1) , mhDir)
+        shutil.copy(str(theirDirectory) + '/' + str(antigenfileName), mhDir) # Brings the PDB to be colored to the right dir
+        molH.MolHM(mhDir, antigenfileName, finaljobName, numCommunities) # Molecular Heatmap Magic
+    Button(binWindow, text='Submit', command=finishingUp).grid(row=5, column=1, stick=W, pady=4)
 
 
 window.mainloop()
