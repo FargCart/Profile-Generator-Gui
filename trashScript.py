@@ -34,11 +34,15 @@ from glob import glob
 
 
 
+def xlsxClicked():
+    xlsxFile = filedialog.askopenfilename(initialdir=str(os.system("pwd")), title="Select .xlsx file",
+                                              filetypes=(("xlsx files", "*.xlsx"), ("all files", "*.*")))
+    commFile = str(xlsxFile).split('/')
+    global commFile
+    nbFileName = str(commFile[-1])
 
-
-
-
-
+xlsxButton = Button(binWindow, text='Select xlsx File', command=xlsxClicked)
+xlsxButton.grid(column=1, row=1)
 
 
 

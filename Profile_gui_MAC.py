@@ -45,22 +45,23 @@ import MolHeat as molH
 
 
 
-def center(win):
-    """
-    centers a tkinter window
-    :param win: the root or Toplevel window to center
-    """
-    win.update_idletasks()
-    width = win.winfo_width()
-    frm_width = win.winfo_rootx() - win.winfo_x()
-    win_width = width + 2 * frm_width
-    height = win.winfo_height()
-    titlebar_height = win.winfo_rooty() - win.winfo_y()
-    win_height = height + titlebar_height + frm_width
-    x = win.winfo_screenwidth() // 2 - win_width // 2
-    y = win.winfo_screenheight() // 2 - win_height // 2
-    win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
-    win.deiconify()
+os.system('chmod 777 RCommunities.py')
+# def center(win):
+#     """
+#     centers a tkinter window
+#     :param win: the root or Toplevel window to center
+#     """
+#     win.update_idletasks()
+#     width = win.winfo_width()
+#     frm_width = win.winfo_rootx() - win.winfo_x()
+#     win_width = width + 2 * frm_width
+#     height = win.winfo_height()
+#     titlebar_height = win.winfo_rooty() - win.winfo_y()
+#     win_height = height + titlebar_height + frm_width
+#     x = win.winfo_screenwidth() // 2 - win_width // 2
+#     y = win.winfo_screenheight() // 2 - win_height // 2
+#     win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+#     win.deiconify()
 
 # Window Setup
 window = Tk()
@@ -80,7 +81,7 @@ def countdown(t):
 
 
 window.geometry('600x400')
-center(window)
+# center(window)
 
 
 window.title("Antibody-Antigen Profile Generator")
@@ -229,7 +230,7 @@ def LetsDock():
     antigenFile = antigenfileName
     dockWindow = Tk()
     dockWindow.geometry('300x300')
-    center(dockWindow)
+    # center(dockWindow)
     dockWindow.title("Chain Select")
     Label(dockWindow, text='Job Name').grid(row=0)
     Label(dockWindow, text='Antigen Chain').grid(row=1)
@@ -289,7 +290,7 @@ def LetsDock():
 def waitTime():
     waitWindow = Tk()
     waitWindow.geometry('300x100')
-    center(waitWindow)
+    # center(waitWindow)
     waitWindow.title("Input iD")
     Label(waitWindow, text='Job ID ').grid(row=1)
     Label(waitWindow, text='Job Name').grid(row=0)
@@ -407,9 +408,10 @@ def makeInteraction():
 def halfwayThere(): # This is a point in which we can use already generated interaction tables
     halfWindow = Tk()
     halfWindow.geometry('500x200')
-    center(halfWindow)
+    # center(halfWindow)
     global halfwayDir
-    halfwayDir = '/home/lab/Desktop/Profile-Generator-Gui-master/cluspro.290087/Balanced_models'
+    # halfwayDir = '/home/lab/Desktop/Profile-Generator-Gui-master/cluspro.290087/Balanced_models' # Linux
+    halfwayDir = '/Users/AdamClosmore/PycharmProjects/Profile_Generator/cluspro.290087/Balanced_models' # Mac
 
 
     # halfButton = Button(halfWindow, text="Dir above Interaction tables", command=halfwayThere)
@@ -471,8 +473,11 @@ def clusteringClicked():
 
 def createCluster():
     os.chdir(str(theirDirectory))
-    print('Opening Clustering Program')
-    os.system("R -e \"shiny::runApp('NBClust_program',launch.browser=TRUE)\"")
+    clusWindow = Tk()
+    clusWindow.geometry('100x100')
+    # center(clusWindow)
+    Button(clusWindow, text="Communities Done!?", command=createMH).grid(row=1, column=1, stick=W)
+    # subprocess.run("Rscript -e \"shiny::runApp('NBClust_program',launch.browser=TRUE)\"", shell=False)
     #
     # if mhButton1var.get() == 1:
     #     createMH()
@@ -491,20 +496,28 @@ def createMH():
     os.chdir(str(theirDirectory))
     binWindow = Tk()
     binWindow.title('Molecular Heatmap')
-    binWindow.geometry('300x300')
-    center(binWindow)
+    binWindow.geometry('400x200')
+    # center(binWindow)
     binWindow.title("Community Check")
     Label(binWindow, text='How many communities did you select?').grid(row=0)
-    Label(binWindow, text='What is the Name of NBclust file w/ extension?').grid(row=1)
+    # Label(binWindow, text='What is the Name of NBclust file w/ extension?').grid(row=1)
     communityBox = Entry(binWindow)
-    nbFile = Entry(binWindow)
+    # nbFile = Entry(binWindow)
     communityBox.grid(row=0, column=1)
-    nbFile.grid(row=1, column=1)
-    global numCommunities
-    numCommunities = communityBox.get()
-    global nbFileName
-    nbFileName = nbFile.get()
+    # nbFile.grid(row=1, column=1)
+    def xlsxClicked():
+        xlsxFile = filedialog.askopenfilename(initialdir=str(os.system("pwd")), title="Select .xlsx file",
+                                              filetypes=(("xlsx files", "*.xlsx"), ("all files", "*.*")))
+        commFile = str(xlsxFile).split('/')
+        global nbFileName
+        nbFileName = str(commFile[-1])
+    os.chdir(str(theirDirectory) + '/cluspro.' + str(finalID) + "/Balanced_models/" + str(finaljobName) + '_interaction_tables')
+    os.system('pwd')
     def finishingUp():
+        global numCommunities
+        numCommunities = communityBox.get()
+        # global nbFileName
+        # nbFileName = nbFile.get()
         sb.sorting(str(nbFileName))  # This will short the interaction tables into correct bins
         cbt.cbt(numCommunities) # This will put all the .csv files in each bin together into one big file
         ts.Totals(str(antigenChain), str(numCommunities)) # This is where to totals scripts will be created
@@ -513,14 +526,16 @@ def createMH():
         os.chdir('cluspro.' + finalID)
         os.chdir('Balanced_models')
         os.mkdir(str(finaljobName) + "_Molecular_Heatmap")
-        mhDir = str(theirDirectory) + '/cluspro.' + str(finalID) + '/Balanced_models/' + str(finaljobName + ' Molecular_Heatmap')
+        mhDir = str(theirDirectory) + '/cluspro.' + str(finalID) + '/Balanced_models/' + str(finaljobName + '_Molecular_Heatmap')
         mhDir = str(mhDir)
-        for rt in range(0, numCommunities): # This will move all the appropriate .csv files from their original dir and put them
+        for rt in range(0, int(numCommunities)): # This will move all the appropriate .csv files from their original dir and put them
                                             # in a dir that is intended for all Molecular heatmap files
             shutil.copy(str(theirDirectory) + '/cluspro.' + str(finalID) + "/Balanced_models/" + str(finaljobName) + '_interaction_tables/' +
-                        'Bin ' + str(rt+1) + "/Residue Percent Bin " + str(rt+1) , mhDir)
+                        'Bin ' + str(rt+1) + "/Residue Percent Bin " + str(rt+1) + '.csv' , mhDir)
         shutil.copy(str(theirDirectory) + '/' + str(antigenfileName), mhDir) # Brings the PDB to be colored to the right dir
         molH.MolHM(mhDir, antigenfileName, finaljobName, numCommunities) # Molecular Heatmap Magic
+    xlsxButton = Button(binWindow, text='Select xlsx File', command=xlsxClicked)
+    xlsxButton.grid(column=1, row=1)
     Button(binWindow, text='Submit', command=finishingUp).grid(row=5, column=1, stick=W, pady=4)
 
 

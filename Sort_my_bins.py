@@ -3,7 +3,7 @@
 
 @author: Juechen
 '''
-import xlsx2list
+import mhxlsx2list
 import SortingTools as st
 import MakeFolderTools as MFT
 import os,shutil
@@ -15,7 +15,7 @@ def sorting(table):
     tableName = str(table)
 
 
-    Metrics=xlsx2list.getList(str(tableName) , 'Table metrics')
+    Metrics=mhxlsx2list.getList(str(tableName) , 'Table metrics')
     Metrics=st.SortMetrics(Metrics)
 
     Groups=list(set([x[1] for x in Metrics]))
