@@ -17,31 +17,31 @@ import tarfile
 
 import time
 
-import cluspro_renaming as cr
+import Scripts.cluspro_renaming as cr
 
 import re
 
 import shutil
 
-import Protein_Interaction_Analysis as pia
+import Scripts.Protein_Interaction_Analysis as pia
 
-import split_CSV as sc
+import Scripts.split_CSV as sc
 
-import heatmapGen as hm
+import Scripts.heatmapGen as hm
 
-import cluspro_put_together as pt
+import Scripts.cluspro_put_together as pt
 
-import excel_converter as ec
+import Scripts.excel_converter as ec
 
-import Sort_my_bins as sb
+import Scripts.Sort_my_bins as sb
 
-import Create_bins_together as cbt
+import Scripts.Create_bins_together as cbt
 
-import Totals_Script as ts
+import Scripts.Totals_Script as ts
 
-import percentr_contribution as pc
+import Scripts.percentr_contribution as pc
 
-import MolHeat as molH
+import Scripts.MolHeat as molH
 
 
 
