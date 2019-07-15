@@ -1,8 +1,8 @@
 # Will take total tables that you have already generated and find out of all
 # the hits, what percent of those belong to that specific residue 
 
-import perc_fileReader as fr
-import perc_fileWriter as fw
+import Scripts.perc_fileReader as fr
+import Scripts.perc_fileWriter as fw
 import os
 
 def Percentages(bins):

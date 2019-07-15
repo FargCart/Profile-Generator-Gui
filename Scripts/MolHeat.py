@@ -1,8 +1,8 @@
-import mhFileReader as fr
+import Scripts.mhFileReader as fr
 from pymol import cmd
 import pymol
 from tkinter import filedialog
-import ColoringTools as ct
+import Scripts.ColoringTools as ct
 import os
 
 #Can switch Featurecolumn between 8 and 9 depending on if you want "total" or "percentage"

@@ -1,7 +1,7 @@
 #ONLY COMPATIBLE WITH 2.6.XX PYTHON 
 
-import FileReader as fr
-import FileWriter as fw
+import Scripts.FileReader as fr
+import Scripts.FileWriter as fw
 import os
 
 

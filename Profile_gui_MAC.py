@@ -1,4 +1,4 @@
-import pymol
+#import pymol
 import tkinter
 
 from tkinter import *
@@ -43,9 +43,11 @@ import Scripts.percentr_contribution as pc
 
 import Scripts.MolHeat as molH
 
+# from PIL import ImageTk, Image
 
 
-os.system('chmod 777 RCommunities.py')
+
+# os.system('chmod 777 RCommunities.py')
 # def center(win):
 #     """
 #     centers a tkinter window
@@ -67,7 +69,10 @@ os.system('chmod 777 RCommunities.py')
 window = Tk()
 chk_state = BooleanVar()
 chk_state.set(False)
+# picPath = 'Face1.jpg'
+# img = ImageTk.PhotoImage(Image.open((picPath)))
 
+print("made it")
 
 # Used to make Checkdock wait a certain amount of time before checking again
 def countdown(t):
@@ -100,8 +105,8 @@ heatmapButton1var = IntVar()
 heatmapButton2var = IntVar()
 clustButton1var = IntVar()
 clustButton2var = IntVar()
-metricButton1var = IntVar()
-metricButton2var = IntVar()
+multiDockButton1var = IntVar()
+multiDockButton2var = IntVar()
 venndiagramButton1var = IntVar()
 venndiagramButton2var = IntVar()
 mhButton1var = IntVar()
@@ -115,10 +120,11 @@ interactionLabel = Label(window, text="Interaction table", font='Helivitca')
 heatmapLabel = Label(window, text="Heatmap", font='Helivtica')
 clusterLabel = Label(window, text="Cluster", font='Helivtica')
 mhLabel = Label(window, text="Molecular Heatmap", font="Helivitica")
-metricsLabel = Label(window, text="Metrics", font='Helivtica')
+multidockLabel = Label(window, text="Multiple Docks", font='Helivtica')
 venndiagram = Label(window, text="Venn Diagram", font='Helivtica')
 checkDock = Label(window, text="Check Dock", font='Helivtica')
 halfWay = Label(window, text="Interactions_done", font='Helivtica')
+# imgLabel = Label(window, image = img)
 
 # Options Placement
 dockLabel.grid(column=0, row=1, sticky=W)
@@ -126,10 +132,12 @@ interactionLabel.grid(column=0, row=2, sticky=W)
 heatmapLabel.grid(column=0, row=3, sticky=W)
 clusterLabel.grid(column=0, row=4, sticky=W)
 mhLabel.grid(column=0, row=5, sticky=W)
-metricsLabel.grid(column=0, row=6, sticky=W)
+multidockLabel.grid(column=0, row=6, sticky=W)
 venndiagram.grid(column=0, row=7, stick=W)
 checkDock.grid(column=0, row=8, stick=W)
 halfWay.grid(column=0, row=9, stick=W)
+# imgLabel.grid(column=11, row=6)
+
 
 
 # Options Check marks
@@ -143,8 +151,8 @@ clustButton1 = Checkbutton(window, text='Yes', var=clustButton1var)
 clustButton2 = Checkbutton(window, text='No', var=clustButton2var)
 mhButton1 = Checkbutton(window, text='Yes', var=mhButton1var)
 mhButton2 = Checkbutton(window, text='No', var=mhButton2var)
-metricButton1 = Checkbutton(window, text='Yes', var=metricButton1var)
-metricButton2 = Checkbutton(window, text='No', var=metricButton2var)
+multiDockButton1 = Checkbutton(window, text='Yes', var=multiDockButton1var)
+multiDockButton2 = Checkbutton(window, text='No', var=multiDockButton2var)
 venndiagramButton1 = Checkbutton(window, text='Yes', var=venndiagramButton1var)
 venndiagramButton2 = Checkbutton(window, text='No', var=venndiagramButton2var)
 checkDockButton1 = Checkbutton(window, text='Yes', var=checkDockButton1var)
@@ -161,8 +169,8 @@ clustButton1.grid(column=1, row=4)
 clustButton2.grid(column=2, row=4)
 mhButton1.grid(column=1, row=5)
 mhButton2.grid(column=2, row=5)
-metricButton1.grid(column=1, row=6)
-metricButton2.grid(column=2, row=6)
+multiDockButton1.grid(column=1, row=6)
+multiDockButton2.grid(column=2, row=6)
 venndiagramButton1.grid(column=1, row=7)
 venndiagramButton2.grid(column=2, row=7)
 checkDockButton1.grid(column=1, row=8)
@@ -537,6 +545,4 @@ def createMH():
     xlsxButton = Button(binWindow, text='Select xlsx File', command=xlsxClicked)
     xlsxButton.grid(column=1, row=1)
     Button(binWindow, text='Submit', command=finishingUp).grid(row=5, column=1, stick=W, pady=4)
-
-
 window.mainloop()
